@@ -28,7 +28,7 @@ export class ServicioClientesService {
         return { status: HttpStatus.OK, msg: 'Cliente eliminado' };
     }
 
-    async buscarNombre(username:string){
-        return await this.model.findOne({username:username});
+    async buscarNombre(clienteDTO:ClientesDTO){
+        return await this.model.findOne({username:clienteDTO});
     }
 }

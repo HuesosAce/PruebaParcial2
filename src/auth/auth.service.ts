@@ -8,18 +8,24 @@ export class AuthService {
 
     constructor(private readonly servicioCliente: ServicioClientesService,
         private readonly jwtService: JwtService) { }
-    async validarCliente(username: string, password: string): Promise<any> {
-        const user = await this.servicioCliente.buscarNombre(username);
+    async validarCliente(clienteDTO: ClientesDTO): Promise<any> {
+        const user = await this.servicioCliente.buscarNombre(clienteDTO);
+        return user;
     }
 
-    async signIn(user: any) {
-        const payload ={
-            username :user.nombre,
-            sub: user._id
-        };
-        return {
-            access_token: this.jwtService.sign(payload)
-        };
+    async signIn(clienteDTO: ClientesDTO) {
+        const user = await this.validarCliente(clienteDTO);
+        if (user) {
+            const payload = {
+                username: user.nombre,
+                sub: user._id
+            };
+            return {
+                access_token: this.jwtService.sign(payload)
+            };
+        } else {
+            throw new Error('Nombre de usuario o contraseña incorrectos');
+        }
     }
 
     async signUp(clienteDTO: ClientesDTO) {
